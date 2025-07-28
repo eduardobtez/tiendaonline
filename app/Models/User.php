@@ -12,6 +12,11 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+     /**
+     * Nombre de la tabla personalizada en la base de datos tiendaropa
+     */
+    protected $table = 'usuariosistema';
+
     /**
      * The attributes that are mass assignable.
      *
