@@ -19,3 +19,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
 
+use App\Http\Controllers\ProductoController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('productos', ProductoController::class)->except(['show']);
+});
