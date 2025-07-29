@@ -10,6 +10,7 @@
         <a class="navbar-brand" href="#">Tienda</a>
         <a class="navbar-brand" href="{{ route('cliente.index') }}">Clientes</a>
         <a class="navbar-brand" href="{{ route('productos.index') }}">Productos</a>
+        <a class="navbar-brand" href="{{ route('pedidos.index') }}">Pedidos</a>
         <div class="ms-auto">
             @auth
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
