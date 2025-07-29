@@ -8,6 +8,8 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
         <a class="navbar-brand" href="#">Tienda</a>
+        <a class="navbar-brand" href="{{ route('cliente.index') }}">Clientes</a>
+        <a class="navbar-brand" href="{{ route('productos.index') }}">Productos</a>
         <div class="ms-auto">
             @auth
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">

@@ -24,3 +24,8 @@ use App\Http\Controllers\ProductoController;
 Route::middleware(['auth'])->group(function () {
     Route::resource('productos', ProductoController::class)->except(['show']);
 });
+
+use App\Http\Controllers\ClienteController;
+
+Route::resource('cliente', ClienteController::class)->middleware('auth');
+
