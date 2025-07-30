@@ -32,3 +32,7 @@ Route::resource('cliente', ClienteController::class)->middleware('auth');
 use App\Http\Controllers\PedidoController;
 
 Route::resource('pedidos', PedidoController::class);
+
+use App\Http\Controllers\EnvioController;
+
+Route::resource('envio', EnvioController::class);
