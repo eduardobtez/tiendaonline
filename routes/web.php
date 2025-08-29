@@ -36,3 +36,9 @@ Route::resource('pedidos', PedidoController::class);
 use App\Http\Controllers\EnvioController;
 
 Route::resource('envio', EnvioController::class);
+
+use App\Http\Controllers\VarianteController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('variantes', VarianteController::class);
+});
