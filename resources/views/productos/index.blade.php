@@ -24,8 +24,8 @@
             @foreach ($productos as $producto)
                 <tr>
                     <td>{{ $producto->nombre }}</td>
-                    <td>{{ $producto->categoria->nombre }}</td>
-                    <td>{{ $producto->tipo->nombre }}</td>
+                    <td>{{ $producto->categoria?->nombre ?? 'Sin categoría' }}</td>
+                    <td>{{ $producto->tipo?->nombre ?? 'Sin tipo' }}</td>
                     <td>${{ number_format($producto->precio, 2) }}</td>
                     <td>{{ $producto->activo ? 'Sí' : 'No' }}</td>
                     <td>

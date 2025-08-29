@@ -1,57 +1,39 @@
-<?php
+@extends('layouts.app')
 
-namespace App\Http\Controllers;
+@section('content')
+<div class="container">
+    <h2>Categorías</h2>
+    <a href="{{ route('categorias.create') }}" class="btn btn-primary mb-3">Nueva Categoría</a>
 
-use App\Models\Categoria;
-use Illuminate\Http\Request;
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-class CategoriaController extends Controller
-{
-    public function index()
-    {
-        $categorias = Categoria::all();
-        return view('categorias.index', compact('categorias'));
-    }
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($categorias as $categoria)
+            <tr>
+                <td>{{ $categoria->id_categoria }}</td>
+                <td>{{ $categoria->nombre }}</td>
+                <td>
+                    <a href="{{ route('categorias.edit', $categoria) }}" class="btn btn-warning btn-sm">Editar</a>
 
-    public function create()
-    {
-        return view('categorias.create');
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:100',
-        ]);
-
-        Categoria::create($request->all());
-
-        return redirect()->route('categorias.index')->with('success', 'Categoría creada correctamente.');
-    }
-
-    public function edit($id)
-    {
-        $categoria = Categoria::findOrFail($id);
-        return view('categorias.edit', compact('categoria'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:100',
-        ]);
-
-        $categoria = Categoria::findOrFail($id);
-        $categoria->update($request->all());
-
-        return redirect()->route('categorias.index')->with('success', 'Categoría actualizada correctamente.');
-    }
-
-    public function destroy($id)
-    {
-        $categoria = Categoria::findOrFail($id);
-        $categoria->delete();
-
-        return redirect()->route('categorias.index')->with('success', 'Categoría eliminada correctamente.');
-    }
-}
+                    <form action="{{ route('categorias.destroy', $categoria) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar categoría?')">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+@endsection
