@@ -9,15 +9,16 @@ class Categoria extends Model
 {
     use HasFactory;
 
-    // Nombre de la tabla
     protected $table = 'categoria';
+    protected $primaryKey = 'id';
 
-    // Clave primaria personalizada
-    protected $primaryKey = 'id_categoria';
+    public $timestamps = false; // Desactiva created_at y updated_at
 
-    // Desactivar timestamps
-    public $timestamps = false;
-
-    // Campos asignables
     protected $fillable = ['nombre'];
+
+    public function productos()
+    {
+        // lave foránea correcta en la tabla producto
+        return $this->hasMany(Producto::class, 'categoria_id', 'id');
+    }
 }

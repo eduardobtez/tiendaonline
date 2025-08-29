@@ -3,7 +3,26 @@
 @section('content')
 <div class="container">
     <h2>Editar Categoría</h2>
-    <form action="{{ route('categorias.update', $categoria->id_categoria) }}" method="POST">
+
+    {{-- Mostrar errores de validación si los hay --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- Mostrar mensajes de error en session (por ejemplo al eliminar con productos asociados) --}}
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <form action="{{ route('categorias.update', $categoria->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="mb-3">
