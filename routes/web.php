@@ -42,3 +42,9 @@ use App\Http\Controllers\VarianteController;
 Route::middleware(['auth'])->group(function () {
     Route::resource('variantes', VarianteController::class);
 });
+
+use App\Http\Controllers\PagoController;
+
+Route::middleware(['auth', 'rol:admin,editor'])->group(function () {
+    Route::resource('pagos', PagoController::class);
+});
