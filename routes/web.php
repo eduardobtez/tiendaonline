@@ -1,60 +1,79 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 
+// Controladores
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\EnvioController;
+use App\Http\Controllers\VarianteController;
+use App\Http\Controllers\PagoController;
+use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\TipoProductoController;
+
+/*
+|--------------------------------------------------------------------------
+| Rutas públicas
+|--------------------------------------------------------------------------
+*/
+
+// Página de inicio
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Rutas de login
-Route::get('/login', [AuthController::class, 'showLoginForm'])->middleware('guest')->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+// Login / Guest
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+});
 
-// Ruta de logout
+// Logout
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-// Ruta protegida de ejemplo
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
+/*
+|--------------------------------------------------------------------------
+| Rutas protegidas por autenticación
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
 
-use App\Http\Controllers\ProductoController;
+    // Dashboard
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
+    // Productos
     Route::resource('productos', ProductoController::class)->except(['show']);
-});
 
-use App\Http\Controllers\ClienteController;
+    // Clientes
+    Route::resource('cliente', ClienteController::class);
 
-Route::resource('cliente', ClienteController::class)->middleware('auth');
+    // Pedidos
+    Route::resource('pedidos', PedidoController::class);
 
-use App\Http\Controllers\PedidoController;
+    // Envíos
+    Route::resource('envio', EnvioController::class);
 
-Route::resource('pedidos', PedidoController::class);
-
-use App\Http\Controllers\EnvioController;
-
-Route::resource('envio', EnvioController::class);
-
-use App\Http\Controllers\VarianteController;
-
-Route::middleware(['auth'])->group(function () {
+    // Variantes
     Route::resource('variantes', VarianteController::class);
+
+    // Categorías con PK personalizada
+    Route::resource('categorias', CategoriaController::class)
+        ->parameters(['categorias' => 'categoria:id']);
+
+    // Tipos de Producto con PK personalizada
+    Route::resource('tipoproductos', TipoProductoController::class)
+        ->parameters(['tipoproductos' => 'tipoproducto:id']);
 });
 
-use App\Http\Controllers\PagoController;
-
+/*
+|--------------------------------------------------------------------------
+| Rutas con middleware adicional de roles
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'rol:admin,editor'])->group(function () {
     Route::resource('pagos', PagoController::class);
 });
-
-use App\Http\Controllers\CategoriaController;
-
-Route::resource('categorias', CategoriaController::class);
-
-
-
-
-use App\Http\Controllers\TipoProductoController;
-Route::resource('tipoproductos', TipoProductoController::class);
