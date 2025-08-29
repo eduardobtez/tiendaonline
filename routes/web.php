@@ -48,3 +48,13 @@ use App\Http\Controllers\PagoController;
 Route::middleware(['auth', 'rol:admin,editor'])->group(function () {
     Route::resource('pagos', PagoController::class);
 });
+
+use App\Http\Controllers\CategoriaController;
+
+Route::resource('categorias', CategoriaController::class);
+
+
+
+
+use App\Http\Controllers\TipoProductoController;
+Route::resource('tipoproductos', TipoProductoController::class);
