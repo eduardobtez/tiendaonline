@@ -12,6 +12,9 @@
         <a class="navbar-brand" href="{{ route('productos.index') }}">Productos</a>
         <a class="navbar-brand" href="{{ route('pedidos.index') }}">Pedidos</a>
         <a class="navbar-brand" href="{{ route('envio.index') }}">Envios</a>
+        <a class="navbar-brand" href="{{ route('variantes.index') }}">Variantes</a>
+        <a class="navbar-brand" href="{{ route('categorias.index') }}">Categorias</a>
+        <a class="navbar-brand" href="{{ route('tipoproductos.index') }}">Tipos Prod.</a>
         <div class="ms-auto">
             @auth
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
