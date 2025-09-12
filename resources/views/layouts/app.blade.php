@@ -7,22 +7,41 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
-        <a class="navbar-brand" href="#">Tienda</a>
-        <a class="navbar-brand" href="{{ route('cliente.index') }}">Clientes</a>
-        <a class="navbar-brand" href="{{ route('productos.index') }}">Productos</a>
-        <a class="navbar-brand" href="{{ route('pedidos.index') }}">Pedidos</a>
-        <a class="navbar-brand" href="{{ route('envio.index') }}">Envios</a>
-        <a class="navbar-brand" href="{{ route('variantes.index') }}">Variantes</a>
-        <a class="navbar-brand" href="{{ route('categorias.index') }}">Categorias</a>
-        <a class="navbar-brand" href="{{ route('tipoproductos.index') }}">Tipos Prod.</a>
-        <div class="ms-auto">
-            @auth
+
+        @auth
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {{-- Admin y Editor --}}
+                @if(in_array(auth()->user()->rol, ['admin', 'editor']))
+                    <a class="navbar-brand" href="{{ route('dashboard') }}">Tienda</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('cliente.index') }}">Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('productos.index') }}">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('pedidos.index') }}">Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('variantes.index') }}">Variantes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('pagos.index') }}">Pagos</a></li>
+                @endif
+
+                {{-- Solo Admin --}}
+                @if(auth()->user()->rol === 'admin')
+                    <li class="nav-item"><a class="nav-link" href="{{ route('categorias.index') }}">Categorías</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('tipoproductos.index') }}">Tipos Prod.</a></li>
+                @endif
+
+                {{-- Solo Logística --}}
+                @if(auth()->user()->rol === 'logistica')
+                    <li class="nav-item"><a class="nav-link" href="{{ route('envio.index') }}">Envios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('productos.index') }}">Productos</a></li>
+                @endif
+            </ul>
+
+            <div class="ms-auto">
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
                     @csrf
                     <button type="submit" class="btn btn-outline-danger">Cerrar sesión</button>
                 </form>
-            @endauth
+            </div>
         </div>
+        @endauth
     </nav>
 
     <div class="container py-4">

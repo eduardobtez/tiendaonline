@@ -67,13 +67,9 @@ Route::middleware('auth')->group(function () {
     // Tipos de Producto con PK personalizada
     Route::resource('tipoproductos', TipoProductoController::class)
         ->parameters(['tipoproductos' => 'tipoproducto:id']);
+
+    // Pagos
+    Route::resource('pagos', PagoController::class); 
+        
 });
 
-/*
-|--------------------------------------------------------------------------
-| Rutas con middleware adicional de roles
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'rol:admin,editor'])->group(function () {
-    Route::resource('pagos', PagoController::class);
-});
