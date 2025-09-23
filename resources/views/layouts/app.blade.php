@@ -19,6 +19,8 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('pedidos.index') }}">Pedidos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('variantes.index') }}">Variantes</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('pagos.index') }}">Pagos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('colores.index') }}">Colores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('talles.index') }}">Talles</a></li>
                 @endif
 
                 {{-- Solo Admin --}}
@@ -47,5 +49,7 @@
     <div class="container py-4">
         @yield('content')
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

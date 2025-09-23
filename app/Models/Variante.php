@@ -32,4 +32,11 @@ class Variante extends Model
     {
         return $this->belongsTo(Talle::class, 'talle_id');
     }
+
+    public function imagenes()
+{
+    return $this->hasMany(VarianteImagen::class);
+}
+
+    
 }

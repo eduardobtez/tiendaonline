@@ -9,6 +9,9 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\EnvioController;
 use App\Http\Controllers\VarianteController;
+use App\Http\Controllers\VarianteImagenController;
+use App\Http\Controllers\ColorController;
+use App\Http\Controllers\TalleController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\TipoProductoController;
@@ -59,6 +62,15 @@ Route::middleware('auth')->group(function () {
 
     // Variantes
     Route::resource('variantes', VarianteController::class);
+    Route::delete('variantes/imagen/{imagen}', [VarianteImagenController::class, 'destroy'])->name('variantes.imagen.destroy');
+    
+
+
+    //Colores
+    Route::resource('colores', ColorController::class);
+
+    // Talles
+    Route::resource('talles', TalleController::class);
 
     // Categorías con PK personalizada
     Route::resource('categorias', CategoriaController::class)

@@ -10,7 +10,7 @@
         </div>
     @endif
 
-    <form action="{{ route('variantes.store') }}" method="POST">
+    <form action="{{ route('variantes.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="row g-3">
@@ -55,14 +55,19 @@
             </div>
 
             <div class="col-md-2">
-                <label class="form-label">Peso (kg)</label>
+                <label class="form-label">Peso (g)</label>
                 <input type="number" step="0.01" name="peso" class="form-control" min="0" value="{{ old('peso') }}">
             </div>
 
+            <!-- NUEVO: Subir imágenes desde PC -->
             <div class="col-md-4">
-                <label class="form-label">Imagen (URL)</label>
-                <input type="url" name="imagen_url" class="form-control" value="{{ old('imagen_url') }}">
+                <label class="form-label">Imágenes (puede seleccionar varias)</label>
+                <input type="file" name="imagenes[]" class="form-control" multiple accept="image/*" id="imagenesInput">
             </div>
+
+            <!-- Previsualización de imágenes -->
+            <div class="col-12 mt-2" id="previewContainer" style="display:flex; gap:10px; flex-wrap: wrap;"></div>
+
         </div>
 
         <div class="mt-4">
@@ -71,4 +76,25 @@
         </div>
     </form>
 </div>
+
+<!-- Script para previsualizar imágenes -->
+<script>
+    document.getElementById('imagenesInput').addEventListener('change', function(event) {
+        const previewContainer = document.getElementById('previewContainer');
+        previewContainer.innerHTML = ''; // Limpiar previews anteriores
+
+        Array.from(event.target.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.height = '100px';
+                img.style.objectFit = 'contain';
+                img.classList.add('border', 'p-1');
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
 @endsection

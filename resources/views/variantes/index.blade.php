@@ -20,7 +20,7 @@
                     <th>Talle</th>
                     <th>Código de barra</th>
                     <th>Stock</th>
-                    <th>Peso (kg)</th>
+                    <th>Peso (g)</th>
                     <th>Imagen</th>
                     <th class="text-end">Acciones</th>
                 </tr>
@@ -36,14 +36,16 @@
                     <td>{{ $v->stock }}</td>
                     <td>{{ $v->peso ?? '-' }}</td>
                     <td>
-                        @if($v->imagen_url)
-                            <img src="{{ $v->imagen_url }}" alt="imagen variante" style="height:40px;width:auto;">
-                        @else
-                            -
-                        @endif
-                    </td>
+    @forelse($v->imagenes as $img)
+        <img src="{{ asset('storage/' . $img->imagen_url) }}" 
+             class="img-thumbnail me-1 mb-1" style="max-height: 80px;">
+    @empty
+        -
+    @endforelse
+</td>
+
                     <td class="text-end">
-                        <a href="{{ route('variantes.show', $v) }}" class="btn btn-sm btn-info">Ver</a>
+                        <a href="{{ route('variantes.show', $v) }}" class="btn btn-sm btn-info" >Ver</a>
                         <a href="{{ route('variantes.edit', $v) }}" class="btn btn-sm btn-warning">Editar</a>
                         <form action="{{ route('variantes.destroy', $v) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar variante?')">
                             @csrf @method('DELETE')

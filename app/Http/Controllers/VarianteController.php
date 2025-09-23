@@ -12,7 +12,7 @@ class VarianteController extends Controller
 {
     public function index()
     {
-        $variantes = Variante::with(['producto', 'color', 'talle'])
+        $variantes = Variante::with(['producto', 'color', 'talle', 'imagenes'])
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
@@ -37,19 +37,26 @@ class VarianteController extends Controller
             'codigo_barra' => 'nullable|string|max:50',
             'stock'        => 'required|integer|min:0',
             'peso'         => 'nullable|numeric|min:0',
-            'imagen_url'   => 'nullable|url|max:2048',
+            'imagenes.*'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        Variante::create($request->only([
-            'producto_id','color_id','talle_id','codigo_barra','stock','peso','imagen_url'
+        $variante = Variante::create($request->only([
+            'producto_id','color_id','talle_id','codigo_barra','stock','peso'
         ]));
+
+        if ($request->hasFile('imagenes')) {
+            foreach ($request->file('imagenes') as $img) {
+                $path = $img->store('variantes', 'public');
+                $variante->imagenes()->create(['imagen_url' => $path]);
+            }
+        }
 
         return redirect()->route('variantes.index')->with('success', 'Variante creada correctamente.');
     }
 
     public function show(Variante $variante)
     {
-        $variante->load(['producto', 'color', 'talle']);
+        $variante->load(['producto', 'color', 'talle', 'imagenes']);
         return view('variantes.show', compact('variante'));
     }
 
@@ -58,6 +65,8 @@ class VarianteController extends Controller
         $productos = Producto::orderBy('nombre')->get();
         $colores   = Color::orderBy('nombre')->get();
         $talles    = Talle::orderBy('nombre')->get();
+
+        $variante->load('imagenes');
 
         return view('variantes.edit', compact('variante', 'productos', 'colores', 'talles'));
     }
@@ -71,19 +80,33 @@ class VarianteController extends Controller
             'codigo_barra' => 'nullable|string|max:50',
             'stock'        => 'required|integer|min:0',
             'peso'         => 'nullable|numeric|min:0',
-            'imagen_url'   => 'nullable|url|max:2048',
+            'imagenes.*'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $variante->update($request->only([
-            'producto_id','color_id','talle_id','codigo_barra','stock','peso','imagen_url'
+            'producto_id','color_id','talle_id','codigo_barra','stock','peso'
         ]));
 
-        return redirect()->route('variantes.index')->with('success', 'Variante actualizada correctamente.');
+        if ($request->hasFile('imagenes')) {
+            foreach ($request->file('imagenes') as $img) {
+                $path = $img->store('variantes', 'public'); 
+                $variante->imagenes()->create(['imagen_url' => $path]);
+            }
+        }
+
+        return redirect()->route('variantes.edit', $variante)->with('success', 'Variante actualizada correctamente.');
     }
 
     public function destroy(Variante $variante)
     {
+        foreach ($variante->imagenes as $img) {
+            if (\Storage::disk('public')->exists($img->imagen_url)) {
+                \Storage::disk('public')->delete($img->imagen_url);
+            }
+        }
+
         $variante->delete();
+
         return redirect()->route('variantes.index')->with('success', 'Variante eliminada correctamente.');
     }
 }
