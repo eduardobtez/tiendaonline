@@ -45,7 +45,7 @@
 </td>
 
                     <td class="text-end">
-                        <a href="{{ route('variantes.show', $v) }}" class="btn btn-sm btn-info" >Ver</a>
+                        <a href="{{ route('variantes.show', $v) }}" class="btn btn-sm btn-info"  >Ver</a>
                         <a href="{{ route('variantes.edit', $v) }}" class="btn btn-sm btn-warning">Editar</a>
                         <form action="{{ route('variantes.destroy', $v) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar variante?')">
                             @csrf @method('DELETE')

@@ -66,10 +66,12 @@ class VarianteController extends Controller
     }
 
     public function show(Variante $variante)
-    {
-        $variante->load(['producto', 'color', 'talle', 'imagenes']);
-        return view('variantes.show', compact('variante'));
-    }
+{
+    $variante->load(['producto', 'color', 'talle', 'imagenes']);
+
+    return view('variantes.partials.show', compact('variante'));
+}
+
 
     public function edit(Variante $variante)
     {
