@@ -7,7 +7,6 @@ use App\Models\Producto;
 use App\Models\Color;
 use App\Models\Talle;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class VarianteController extends Controller
 {
@@ -45,20 +44,10 @@ class VarianteController extends Controller
             'producto_id','color_id','talle_id','codigo_barra','stock','peso'
         ]));
 
-        // Si se suben imágenes, guardarlas y si no hay imagen principal, asignar la primera
         if ($request->hasFile('imagenes')) {
-            $firstPath = null;
             foreach ($request->file('imagenes') as $img) {
-                $path = $img->store('variantes', 'public'); // storage/app/public/variantes/...
+                $path = $img->store('variantes', 'public');
                 $variante->imagenes()->create(['imagen_url' => $path]);
-                if (!$firstPath) {
-                    $firstPath = $path;
-                }
-            }
-
-            if ($firstPath && !$variante->imagen_url) {
-                $variante->imagen_url = $firstPath;
-                $variante->save();
             }
         }
 
@@ -101,44 +90,22 @@ class VarianteController extends Controller
         ]));
 
         if ($request->hasFile('imagenes')) {
-            $firstPath = null;
             foreach ($request->file('imagenes') as $img) {
-                $path = $img->store('variantes', 'public');
+                $path = $img->store('variantes', 'public'); 
                 $variante->imagenes()->create(['imagen_url' => $path]);
-                if (!$firstPath) {
-                    $firstPath = $path;
-                }
-            }
-
-            // Si no existía imagen principal, setear la primera subida como principal
-            if ($firstPath && !$variante->imagen_url) {
-                $variante->imagen_url = $firstPath;
-                $variante->save();
             }
         }
-
-        // recargar relación para la vista
-        $variante->load('imagenes');
 
         return redirect()->route('variantes.edit', $variante)->with('success', 'Variante actualizada correctamente.');
     }
 
     public function destroy(Variante $variante)
     {
-        // Eliminar imágenes del storage
         foreach ($variante->imagenes as $img) {
-            if (Storage::disk('public')->exists($img->imagen_url)) {
-                Storage::disk('public')->delete($img->imagen_url);
+            if (\Storage::disk('public')->exists($img->imagen_url)) {
+                \Storage::disk('public')->delete($img->imagen_url);
             }
         }
-
-        // Eliminar archivo de imagen principal si apunta a algo distinto
-        if ($variante->imagen_url && Storage::disk('public')->exists($variante->imagen_url)) {
-            Storage::disk('public')->delete($variante->imagen_url);
-        }
-
-        // Eliminar registros en la tabla variante_imagen (siempre que haya FK con cascade podría no ser necesario)
-        $variante->imagenes()->delete();
 
         $variante->delete();
 

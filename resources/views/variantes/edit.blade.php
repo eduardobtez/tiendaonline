@@ -4,7 +4,6 @@
 <div class="container">
     <h1>Editar Variante #{{ $variante->id }}</h1>
 
-    {{-- Mensajes --}}
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
@@ -19,43 +18,11 @@
         </div>
     @endif
 
-    {{-- ----- Sección: Imágenes existentes (fuera del form de update) ----- --}}
-    <div class="mb-4">
-        <label class="form-label">Imágenes existentes</label>
-        <div class="d-flex flex-wrap gap-2 mb-2">
-            @forelse($variante->imagenes as $img)
-                <div class="position-relative">
-                    <img src="{{ asset('storage/'.$img->imagen_url) }}" class="img-thumbnail" style="max-height:120px;">
-                    {{-- Formulario de eliminación individual — este form NO está dentro del form de update --}}
-                    <form action="{{ route('variantes.imagen.destroy', $img->id) }}" method="POST" class="position-absolute top-0 end-0">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm btn-danger" onclick="return confirm('Eliminar imagen?')">&times;</button>
-                    </form>
-                </div>
-            @empty
-                <p class="text-muted">- No hay imágenes cargadas -</p>
-            @endforelse
-        </div>
-        {{-- Mostrar cuál es la imagen principal (si existe) --}}
-        <div>
-            <strong>Imagen principal actual:</strong>
-            @if($variante->imagen_url)
-                <div class="mt-2">
-                    <img src="{{ asset('storage/'.$variante->imagen_url) }}" alt="Principal" style="max-height:160px; object-fit:contain;">
-                </div>
-            @else
-                <span class="text-muted">No hay imagen principal</span>
-            @endif
-        </div>
-    </div>
+    <form action="{{ route('variantes.update', $variante->id) }}" method="POST">
 
-    {{-- ----- Formulario principal: editar datos y agregar nuevas imágenes ----- --}}
-    <form action="{{ route('variantes.update', $variante->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
-        {{-- Datos --}}
         <div class="row g-3 mb-3">
             <div class="col-md-6">
                 <label class="form-label">Producto</label>
@@ -103,17 +70,34 @@
             </div>
         </div>
 
-        {{-- Subir nuevas imágenes (estas se procesan en update) --}}
+        {{-- Imágenes existentes --}}
+        <div class="mb-3">
+            <label class="form-label">Imágenes existentes</label>
+            <div class="d-flex flex-wrap gap-2 mb-2">
+                @forelse($variante->imagenes as $img)
+                    <div class="position-relative">
+                        <img src="{{ asset('storage/'.$img->imagen_url) }}" class="img-thumbnail" style="max-height:120px;">
+                        <form action="{{ route('variantes.imagen.destroy', $img->id) }}" method="POST" class="position-absolute top-0 end-0">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm btn-danger" onclick="return confirm('Eliminar imagen?')">&times;</button>
+                        </form>
+                    </div>
+                @empty
+                    <p>- No hay imágenes cargadas -</p>
+                @endforelse
+            </div>
+        </div>
+
+        {{-- Subir nuevas imágenes --}}
         <div class="mb-3">
             <label class="form-label">Subir nuevas imágenes</label>
             <input type="file" name="imagenes[]" class="form-control" multiple accept="image/*">
             <small class="text-muted">Se permiten jpg, jpeg, png, webp. Tamaño máximo 2MB por imagen.</small>
         </div>
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Actualizar</button>
-            <a href="{{ route('variantes.index') }}" class="btn btn-secondary">Cancelar</a>
-        </div>
+        <button class="btn btn-primary">Actualizar</button>
+        <a href="{{ route('variantes.index') }}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 @endsection

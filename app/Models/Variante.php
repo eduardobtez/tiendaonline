@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Variante extends Model
 {
-    protected $table = 'variante';
-
+    protected $table = 'variante'; // tablas en minúscula
     protected $fillable = [
         'producto_id',
         'color_id',
@@ -35,7 +34,9 @@ class Variante extends Model
     }
 
     public function imagenes()
-    {
-        return $this->hasMany(VarianteImagen::class, 'variante_id');
-    }
+{
+    return $this->hasMany(VarianteImagen::class);
+}
+
+    
 }
