@@ -60,9 +60,12 @@ Route::middleware('auth')->group(function () {
     // Envíos
     Route::resource('envio', EnvioController::class);
 
-    // Variantes
+    // Resource de variantes
     Route::resource('variantes', VarianteController::class);
-    Route::delete('variantes/imagen/{imagen}', [VarianteImagenController::class, 'destroy'])->name('variantes.imagen.destroy');
+
+    // Ruta específica para eliminar una imagen individual (VarianteImagen)
+    Route::delete('variantes/imagen/{imagen}', [VarianteImagenController::class, 'destroy'])
+        ->name('variantes.imagen.destroy');
     
 
 
